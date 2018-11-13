@@ -9,17 +9,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mobile.device.Device;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value; 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TokenUtils {
 
-  private final Logger logger = Logger.getLogger(this.getClass());
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
   private final String AUDIENCE_UNKNOWN   = "unknown";
   private final String AUDIENCE_WEB       = "web";
@@ -105,28 +104,17 @@ public class TokenUtils {
   private Boolean isCreatedBeforeLastPasswordReset(Date created, Date lastPasswordReset) {
     return (lastPasswordReset != null && created.before(lastPasswordReset));
   }
-
-  private String generateAudience(Device device) {
-    String audience = this.AUDIENCE_UNKNOWN;
-    if (device.isNormal()) {
-      audience = this.AUDIENCE_WEB;
-    } else if (device.isTablet()) {
-      audience = AUDIENCE_TABLET;
-    } else if (device.isMobile()) {
-      audience = AUDIENCE_MOBILE;
-    }
-    return audience;
-  }
+ 
 
   private Boolean ignoreTokenExpiration(String token) {
     String audience = this.getAudienceFromToken(token);
     return (this.AUDIENCE_TABLET.equals(audience) || this.AUDIENCE_MOBILE.equals(audience));
   }
 
-  public String generateToken(UserDetails userDetails, Device device) {
+  public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<String, Object>();
     claims.put("sub", userDetails.getUsername());
-    claims.put("audience", this.generateAudience(device));
+    //claims.put("audience", this.generateAudience(device));
     claims.put("created", this.generateCurrentDate());
     return this.generateToken(claims);
   }

@@ -7,12 +7,11 @@ import com.brahalla.Cerberus.security.TokenUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mobile.device.Device;
+import org.springframework.http.ResponseEntity; 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("${cerberus.route.authentication}")
 public class AuthenticationController {
 
-  private final Logger logger = Logger.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
   @Value("${cerberus.token.header}")
   private String tokenHeader;
@@ -44,7 +43,7 @@ public class AuthenticationController {
   private UserDetailsService userDetailsService;
 
   @RequestMapping(method = RequestMethod.POST)
-  public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest, Device device) throws AuthenticationException {
+  public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest) throws AuthenticationException {
 
     // Perform the authentication
     Authentication authentication = this.authenticationManager.authenticate(
@@ -57,7 +56,8 @@ public class AuthenticationController {
 
     // Reload password post-authentication so we can generate token
     UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-    String token = this.tokenUtils.generateToken(userDetails, device);
+    //String token = this.tokenUtils.generateToken(userDetails, device);
+    String token = this.tokenUtils.generateToken(userDetails);
 
     // Return the token
     return ResponseEntity.ok(new AuthenticationResponse(token));
