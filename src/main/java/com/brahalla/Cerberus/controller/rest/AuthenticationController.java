@@ -19,6 +19,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,7 +44,7 @@ public class AuthenticationController {
   @Autowired
   private UserDetailsService userDetailsService;
 
-  @RequestMapping(method = RequestMethod.POST)
+  @PostMapping
   public ResponseEntity<?> authenticationRequest(@RequestBody AuthenticationRequest authenticationRequest) throws AuthenticationException {
 
     // Perform the authentication
@@ -63,7 +65,7 @@ public class AuthenticationController {
     return ResponseEntity.ok(new AuthenticationResponse(token));
   }
 
-  @RequestMapping(value = "${cerberus.route.authentication.refresh}", method = RequestMethod.GET)
+  @GetMapping(value = "${cerberus.route.authentication.refresh}")
   public ResponseEntity<?> authenticationRequest(HttpServletRequest request) {
     String token = request.getHeader(this.tokenHeader);
     String username = this.tokenUtils.getUsernameFromToken(token);
