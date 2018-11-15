@@ -1,8 +1,7 @@
 package com.brahalla.Cerberus.configuration;
 
 import com.brahalla.Cerberus.security.AuthenticationTokenFilter;
-import com.brahalla.Cerberus.security.EntryPointUnauthorizedHandler;
-import com.brahalla.Cerberus.security.TokenUtils;
+import com.brahalla.Cerberus.security.EntryPointUnauthorizedHandler; 
 import com.brahalla.Cerberus.service.SecurityService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
   public AuthenticationManager authenticationManagerBean() throws Exception {
     return super.authenticationManagerBean();
   }
-
+ 
+  
   @Bean
   public AuthenticationTokenFilter authenticationTokenFilterBean() throws Exception {
     AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter();
